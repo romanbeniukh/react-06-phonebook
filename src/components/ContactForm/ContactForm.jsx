@@ -18,13 +18,25 @@ const errorMessages = {
 class ContactForm extends Component {
   static propTypes = {
     addContact: T.func.isRequired,
-    selectedForEdit: T.objectOf(T.string),
-    closeEditContact: T.func,
+    closeEdit: T.func,
+    contacts: T.arrayOf(
+      T.shape({
+        name: T.string,
+        phone: T.string,
+        id: T.number,
+      }),
+    ),
+    toggleNotification: T.func,
+    edit: T.shape({
+      name: T.string,
+      phone: T.string,
+      id: T.number,
+    }),
   };
 
   state = {
-    name: this.props.selectedForEdit ? this.props.selectedForEdit.name : '',
-    phone: this.props.selectedForEdit ? this.props.selectedForEdit.phone : '',
+    name: this.props.edit ? this.props.edit.name : '',
+    phone: this.props.edit ? this.props.edit.phone : '',
     errors: {},
   };
 
@@ -52,10 +64,21 @@ class ContactForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { name, phone } = this.state;
+    const { edit, addContact, toggleNotification } = this.props;
 
     validateAll({ name, phone }, rules, errorMessages)
       .then(res => {
-        this.props.addContact(res);
+        const response = edit ? { id: edit.id, ...res } : res;
+
+        if (this.checkUniqName(response)) {
+          toggleNotification({
+            message: `${name} уже в списке!`,
+          });
+
+          return;
+        }
+
+        addContact(response);
         this.resetForm();
       })
       .catch(err => {
@@ -71,6 +94,12 @@ class ContactForm extends Component {
       });
   };
 
+  checkUniqName = contact => {
+    const { contacts } = this.props;
+
+    return contacts.some(contactName => contactName.name.toLowerCase() === contact.name.toLowerCase());
+  };
+
   resetForm = () => {
     this.setState({
       name: '',
@@ -81,12 +110,10 @@ class ContactForm extends Component {
 
   render() {
     const { name, phone, errors } = this.state;
-    const { selectedForEdit, closeEditContact } = this.props;
+    const { edit, closeEdit } = this.props;
+
     return (
-      <form
-        className={selectedForEdit ? 'contact-form contact-form--edit' : 'contact-form'}
-        onSubmit={this.handleSubmit}
-      >
+      <form className={edit ? 'contact-form contact-form--edit' : 'contact-form'} onSubmit={this.handleSubmit}>
         <div className="contact-form__input-wrap">
           <Input
             name="name"
@@ -113,11 +140,11 @@ class ContactForm extends Component {
         </div>
         <div className="contact-form__btn-wrap">
           <button
-            className={selectedForEdit ? 'contact-form__btn contact-form__btn--done' : 'contact-form__btn'}
+            className={edit ? 'contact-form__btn contact-form__btn--done' : 'contact-form__btn'}
             onSubmit={this.handleSubmit}
             type="submit"
           >
-            {selectedForEdit ? (
+            {edit ? (
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
               </svg>
@@ -125,8 +152,8 @@ class ContactForm extends Component {
               'Добавить контакт'
             )}
           </button>
-          {selectedForEdit && (
-            <button className="contact-form__btn contact-form__btn--close" type="button" onClick={closeEditContact}>
+          {edit && (
+            <button className="contact-form__btn contact-form__btn--close" type="button" onClick={closeEdit}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" />
               </svg>

@@ -6,7 +6,7 @@ const ContactFilter = ({ changeFilter, value }) => (
   <div className="contact-filter">
     <Input
       label="Поиск контакта"
-      handleChange={changeFilter}
+      handleChange={e => changeFilter(e.currentTarget.value)}
       value={value}
       maxLength={20}
       placeholder="Введите имя контакта..."
