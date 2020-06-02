@@ -1,14 +1,16 @@
-import { ADD_NOTIFICATION, CLOSE_NOTIFICATION } from '../constants/ActionTypes';
+import { createReducer } from '@reduxjs/toolkit';
+import { ADD_NOTIFICATION_ACTION, CLOSE_NOTIFICATION_ACTION } from '../actions/NotificationActions';
 
-const notificationReducer = (state = {}, action) => {
-  switch (action.type) {
-    case ADD_NOTIFICATION:
+const notificationReducer = createReducer(
+  {},
+  {
+    [ADD_NOTIFICATION_ACTION]: (state, action) => {
       return action.payload;
-    case CLOSE_NOTIFICATION:
+    },
+    [CLOSE_NOTIFICATION_ACTION]: () => {
       return {};
-    default:
-      return state;
-  }
-};
+    },
+  },
+);
 
 export default notificationReducer;

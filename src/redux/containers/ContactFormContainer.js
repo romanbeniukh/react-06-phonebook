@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { ADD_CONTACT_ACTION } from '../actions';
+import { ADD_CONTACT_ACTION } from '../actions/ContactsActions';
 import ContactForm from '../../components/ContactForm/ContactForm';
 import { GET_ALL_CONTACTS } from '../selectors/ContactsSelector';
 import toggleNotification from '../operations/toggleNotification';
@@ -9,9 +9,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addContact: contact => {
-    dispatch(ADD_CONTACT_ACTION(contact));
-  },
+  addContact: contact => dispatch(ADD_CONTACT_ACTION(contact)),
   toggleNotification: message => dispatch(toggleNotification(message)),
 });
 

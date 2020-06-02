@@ -1,16 +1,17 @@
-import { ADD_CONTACT, REMOVE_CONTACT, SAVE_EDIT_CONTACT } from '../constants/ActionTypes';
+import { createReducer } from '@reduxjs/toolkit';
+import { ADD_CONTACT_ACTION, REMOVE_CONTACT_ACTION } from '../actions/ContactsActions';
+import { SAVE_EDIT_CONTACT_ACTION } from '../actions/ContactEditActions';
 
-const contactsReducer = (state = [], action) => {
-  switch (action.type) {
-    case ADD_CONTACT:
-      return [...state, action.payload];
-    case REMOVE_CONTACT:
-      return state.filter(note => note.id !== action.payload.id);
-    case SAVE_EDIT_CONTACT:
-      return state.map(contact => (contact.id !== action.payload.id ? contact : action.payload));
-    default:
-      return state;
-  }
-};
+const contactsReducer = createReducer([], {
+  [ADD_CONTACT_ACTION]: (state, action) => {
+    return [...state, action.payload];
+  },
+  [REMOVE_CONTACT_ACTION]: (state, action) => {
+    return state.filter(contact => contact.id !== action.payload);
+  },
+  [SAVE_EDIT_CONTACT_ACTION]: (state, action) => {
+    return state.map(contact => (contact.id !== action.payload.id ? contact : action.payload));
+  },
+});
 
 export default contactsReducer;

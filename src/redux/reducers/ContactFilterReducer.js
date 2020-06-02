@@ -1,16 +1,13 @@
-import { FILTER_CONTACT, RESET_FILTER } from '../constants/ActionTypes';
+import { createReducer } from '@reduxjs/toolkit';
+import { FILTER_CONTACT_ACTION, RESET_FILTER_ACTION } from '../actions/ContactFilterActions';
 
-const filterReducer = (state = '', action) => {
-  switch (action.type) {
-    case FILTER_CONTACT:
-      state = action.payload;
-      return state;
-    case RESET_FILTER:
-      state = '';
-      return state;
-    default:
-      return state;
-  }
-};
+const filterReducer = createReducer('', {
+  [FILTER_CONTACT_ACTION]: (state, action) => {
+    return action.payload;
+  },
+  [RESET_FILTER_ACTION]: () => {
+    return '';
+  },
+});
 
 export default filterReducer;

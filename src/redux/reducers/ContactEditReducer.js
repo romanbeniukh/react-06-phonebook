@@ -1,19 +1,26 @@
-import { CLOSE_EDIT_CONTACT, EDIT_CONTACT, SAVE_EDIT_CONTACT } from '../constants/ActionTypes';
+import { createReducer } from '@reduxjs/toolkit';
+import {
+  EDIT_CONTACT_ACTION,
+  CLOSE_EDIT_CONTACT_ACTION,
+  SAVE_EDIT_CONTACT_ACTION,
+} from '../actions/ContactEditActions';
 
-const editContact = (state = { id: null, name: '', phone: '' }, action) => {
-  switch (action.type) {
-    case EDIT_CONTACT:
-      state = action.payload;
-      return state;
-    case SAVE_EDIT_CONTACT:
-      state = { id: null, name: '', phone: '' };
-      return state;
-    case CLOSE_EDIT_CONTACT:
-      state = { id: null, name: '', phone: '' };
-      return state;
-    default:
-      return state;
-  }
+const initialState = {
+  id: null,
+  name: '',
+  phone: '',
 };
+
+const editContact = createReducer(initialState, {
+  [EDIT_CONTACT_ACTION]: (state, action) => {
+    return action.payload;
+  },
+  [SAVE_EDIT_CONTACT_ACTION]: () => {
+    return initialState;
+  },
+  [CLOSE_EDIT_CONTACT_ACTION]: () => {
+    return initialState;
+  },
+});
 
 export default editContact;
