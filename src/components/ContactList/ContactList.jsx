@@ -25,7 +25,7 @@ const ContactList = ({
               removeContact={() => {
                 removeContact(contact.id);
 
-                filteredContacts.length <= 1 && resetFilter('');
+                filteredContacts.length <= 1 && resetFilter();
               }}
               editContact={() => editContact(contact)}
               saveEdit={saveEdit}
